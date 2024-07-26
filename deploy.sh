@@ -1,32 +1,14 @@
 #!/usr/bin/env sh
 
-# abort on errors
-set -e
-
-# build
+# Step 1: Run npm run build
 npm run build
-
-# First commit the code
-git add -A
-git commit -m 'update code'
+# Step 2: Commit and push changes to master branch
+git add .
+git commit -m "Build and deploy"
 git push origin master
-
-# navigate into the build output directory
-cd dist
-
-# if you are deploying to a custom domain
-# echo 'www.example.com' > CNAME
-
-git init
-git remote add pages git@github.com:RossiLorenzo/paris-2024.git
-git add -A
-git commit -m 'deploy'
-git branch gh-pages
-
-# if you are deploying to https://<USERNAME>.github.io
-# git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git main
-
-# if you are deploying to https://<USERNAME>.github.io/<REPO>
-git push -f pages gh-pages
-
-cd -
+# Step 3: Publish content of dist to gh-pages branch
+git checkout gh-pages
+cp -r dist/* .
+git add .
+git commit -m "Publish to GitHub Pages"
+git push origin gh-pages
