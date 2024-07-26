@@ -106,9 +106,17 @@ export default {
             </span>
             <span class="mt-2"> 
               <div v-for="(id, index) in event.italians_ids">
-                <MaterialAvatar v-if="event.italians_names[index] == 'Italy'" image="https://olympics.com/OG2024/assets/images/flags/OG2024/ITA.webp" size='xs' alt="ITA"/>
-                <MaterialAvatar v-else :image="'https://olympics.com/OG2024/pic/OG2024/001/' + id.slice(1, 4) + '/medium/' + id + '.jpg'" size='xs' :alt="event.italians_names[index]"/> 
-                {{ event.italians_names[index] }} {{ event.is_h2h ? 'Vs. ' + event.opponents_names.join(', ') : '' }}
+                <MaterialAvatar v-if="isNaN(id)" image="https://olympics.com/OG2024/assets/images/flags/OG2024/ITA.webp" size='xs' alt="ITA"/>
+                <MaterialAvatar v-else :image="'https://olympics.com/OG2024/pic/OG2024/001/' + id.slice(1, 4) + '/medium/' + id + '.jpg'" size='xs' :alt="event.italians_names[index]"/>
+                <span>
+                  <a v-if="isNaN(id)" :href="'https://olympics.com/en/paris-2024/team/' + id">
+                    &nbsp; {{ event.italians_names[index] }} 
+                  </a>
+                  <a v-else :href="'https://olympics.com/en/paris-2024/athlete/' + id">
+                    &nbsp; {{ event.italians_names[index] }} 
+                  </a>
+                  {{ event.is_h2h ? 'Vs. ' + event.opponents_names.join(', ') : '' }}
+                </span>
               </div>
             </span>
           </div>
