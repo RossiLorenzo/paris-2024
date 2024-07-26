@@ -1,4 +1,6 @@
 <script setup>
+import { ref } from "vue";
+let showDropdown = ref(false);
 //APIs & Utilities
 import get_schedule from "@/assets/js/get_schedule.js";
 import clean_schedules from "@/assets/js/clean_schedules.js";
@@ -14,12 +16,14 @@ export default {
       schedule: [],
       athletes: [],
       loading: true,
-      selectedDate: '2024-07-26' //Start of the Olympics
+      selectedDate: null //Start of the Olympics
     };
   },
   async created() {
     // At mount update immediately the date
-    this.selectedDate = new Date().toISOString().slice(0, 10);
+    const right_now = new Date();
+    const offset = right_now.getTimezoneOffset()
+    this.selectedDate = (new Date(right_now.getTime() - (offset*60*1000))).toISOString().split('T')[0];
     // Get Schedules and Athletes
     const schedule = await get_schedule(this.selectedDate);
     // const schedule = await get_schedule("2024-07-27");
@@ -53,7 +57,8 @@ export default {
 </script>
 
 <template>
-  <div class="card card-body blur shadow-blur mx-3 mx-md-9 mt-2">
+
+  <div class="card card-body blur shadow-blur mx-3 mx-md-9 mt-3">
 
       <div class="container">
         <div class="row">
