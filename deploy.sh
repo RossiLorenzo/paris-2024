@@ -7,8 +7,8 @@ git add .
 git commit -m "Build and deploy"
 git push origin master
 # Step 3: Publish content of dist to gh-pages branch
-git checkout gh-pages
-cp -r dist/* .
+cd dist
 git add .
 git commit -m "Publish to GitHub Pages"
 git push origin gh-pages
+cd -
