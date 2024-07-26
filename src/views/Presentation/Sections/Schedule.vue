@@ -18,6 +18,9 @@ export default {
     };
   },
   async mounted() {
+    console.log('Hello!')
+    console.log(new Date().toISOString().slice(0, 10));
+    console.log(this.selectedDate);
     // Get Schedules and Athletes
     const schedule = await get_schedule(this.selectedDate);
     // const schedule = await get_schedule("2024-07-27");
