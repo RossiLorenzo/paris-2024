@@ -6,8 +6,8 @@
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "predeploy": "git add . & git commit -m 'update code' & git push -f origin master",
-    "deploy": "npm run build & gh-pages -d dist"
+    "predeploy": "git add . && git commit -m 'update code' && git push -f origin master",
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
     "@popperjs/core": "2.11.5",
