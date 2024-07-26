@@ -14,13 +14,12 @@ export default {
       schedule: [],
       athletes: [],
       loading: true,
-      selectedDate: new Date().toISOString().slice(0, 10)
+      selectedDate: '2024-07-26' //Start of the Olympics
     };
   },
-  async mounted() {
-    console.log('Hello!')
-    console.log(new Date().toISOString().slice(0, 10));
-    console.log(this.selectedDate);
+  async created() {
+    // At mount update immediately the date
+    this.selectedDate = new Date().toISOString().slice(0, 10);
     // Get Schedules and Athletes
     const schedule = await get_schedule(this.selectedDate);
     // const schedule = await get_schedule("2024-07-27");
@@ -64,8 +63,7 @@ export default {
           <div class="col-6">
             <div class="container">
               <div class="row">
-                  <i> {{ (new Date(this.selectedDate)).toLocaleString('en-US', { day: '2-digit', month: 'short'})}} </i>
-                <!-- </div> -->
+                  <i> {{ (new Date(selectedDate)).toLocaleString('en-US', { day: '2-digit', month: 'short'})}} </i>
               </div>
               <div class="row">
                 <div class="col-6">
@@ -108,7 +106,7 @@ export default {
             </span>
             <span class="mt-2"> 
               <div v-for="(id, index) in event.italians_ids">
-                <MaterialAvatar v-if="event.italians_names[index] == 'Italy'" image="https://olympics.com/OG2024/assets/images/flags/OG2024/ITA.webp" size='xs' :alt="ITA"/>
+                <MaterialAvatar v-if="event.italians_names[index] == 'Italy'" image="https://olympics.com/OG2024/assets/images/flags/OG2024/ITA.webp" size='xs' alt="ITA"/>
                 <MaterialAvatar v-else :image="'https://olympics.com/OG2024/pic/OG2024/001/' + id.slice(1, 4) + '/medium/' + id + '.jpg'" size='xs' :alt="event.italians_names[index]"/> 
                 {{ event.italians_names[index] }} {{ event.is_h2h ? 'Vs. ' + event.opponents_names.join(', ') : '' }}
               </div>

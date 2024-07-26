@@ -6,7 +6,6 @@ import Header from "../../components/Header.vue";
 
 // sections
 import Schedule from "./Sections/Schedule.vue";
-import Medals from "./Sections/Medals.vue";
 
 //images
 import vueMkHeader from "@/assets/img/vue-mk-header.jpg";
@@ -27,6 +26,5 @@ onUnmounted(() => {
   <Header>
     <div class="page-header min-vh-35" :style="`background-image: url(${vueMkHeader})`" loading="lazy" />
   </Header>
-  <!-- <Medals /> -->
   <Schedule />
 </template>
