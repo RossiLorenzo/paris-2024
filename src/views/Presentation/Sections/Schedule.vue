@@ -26,6 +26,7 @@ export default {
     this.selectedDate = (new Date(right_now.getTime() - (offset*60*1000))).toISOString().split('T')[0];
     // Get Schedules and Athletes
     const schedule = await get_schedule(this.selectedDate);
+    console.log(clean_schedules(schedule))
     // const schedule = await get_schedule("2024-07-27");
     this.schedule = clean_schedules(schedule);
     // Loading completed
@@ -111,8 +112,13 @@ export default {
             </span>
             <span class="mt-2"> 
               <div v-for="(id, index) in event.italians_ids">
+                <!-- Winner/Loser -->
+                <span v-if="event.italians_winners[index]==='W'"> ✅ </span>
+                <span v-if="event.italians_winners[index]==='L'"> ⛔️ </span>
+                <!-- Either the photo or the italian flag -->
                 <MaterialAvatar v-if="isNaN(id)" image="https://olympics.com/OG2024/assets/images/flags/OG2024/ITA.webp" size='xs' alt="ITA"/>
                 <MaterialAvatar v-else :image="'https://olympics.com/OG2024/pic/OG2024/001/' + id.slice(1, 4) + '/medium/' + id + '.jpg'" size='xs' :alt="event.italians_names[index]"/>
+                <!-- Athlete Names and Links -->
                 <span>
                   <a v-if="isNaN(id)" :href="'https://olympics.com/en/paris-2024/team/' + id">
                     &nbsp; {{ event.italians_names[index] }} 
@@ -120,8 +126,9 @@ export default {
                   <a v-else :href="'https://olympics.com/en/paris-2024/athlete/' + id">
                     &nbsp; {{ event.italians_names[index] }} 
                   </a>
-                  {{ event.is_h2h ? 'Vs. ' + event.opponents_names.join(', ') : '' }}
                 </span>
+                <!-- Opponent Info -->
+                {{ event.is_h2h ? 'Vs. ' + event.opponents_names.join(', ') : '' }}
               </div>
             </span>
           </div>

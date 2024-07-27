@@ -21,6 +21,7 @@ export default function clean_schedules(s){
             "is_h2h": is_h2h,
             "italians_names": italians.map(x => x.name),
             "italians_ids": italians.map(x => x.code),
+            "italians_winners": italians.map(x => ((x['results'] || [])["winnerLoserTie"] || '')),
             "opponents_names": non_italians.map(x => x.name),
             "opponents_nocs": non_italians.map(x => x.noc),
             "url": event.extraData.detailUrl,
