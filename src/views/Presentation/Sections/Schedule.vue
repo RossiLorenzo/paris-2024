@@ -100,8 +100,8 @@ export default {
       <div v-else>
           <div v-for="event in schedule" :key="event.id" class="card card-body blur shadow-blur mx-3 mx-md-9 mt-2">
             <span>
-              <span v-if="event.liveFlag">🔴</span> 
-              <span v-if="event.medalFlag">🏅</span> 
+              <span v-if="event.liveFlag"> 🔴 </span> 
+              <span v-if="event.medalFlag"> 🏅 </span> 
               <MaterialAvatar :image="'https://gstatic.olympics.com/s1/t_original/static/light/pictograms-paris-2024/olympics/' + event.disciplineCode + '_small.svg'" size='xs' :alt="event.disciplineCode" /> 
               <b>&nbsp;{{ event.disciplineName }}: </b>
               {{ event.startDate }}
