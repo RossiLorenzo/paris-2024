@@ -4,6 +4,7 @@ let showDropdown = ref(false);
 //APIs & Utilities
 import get_schedule from "@/assets/js/get_schedule.js";
 import clean_schedules from "@/assets/js/clean_schedules.js";
+import filter_schedules from "@/assets/js/filter_schedules.js";
 // Components
 import MaterialAvatar from "@/components/MaterialAvatar.vue";
 import MaterialButton from "@/components/MaterialButton.vue";
@@ -14,6 +15,8 @@ export default {
   data() {
     return {
       schedule: [],
+      filter: 'all',
+      filtered_schedule: [],
       athletes: [],
       loading: true,
       selectedDate: null //Start of the Olympics
@@ -28,6 +31,7 @@ export default {
     const schedule = await get_schedule(this.selectedDate);
     // const schedule = await get_schedule("2024-07-27");
     this.schedule = clean_schedules(schedule);
+    this.filtered_schedule = this.schedule;
     // Loading completed
     this.loading = false;
 
@@ -39,7 +43,7 @@ export default {
   },
   methods: {
     async updateSelectedDate(direction) {
-      this.loading = false;
+      this.loading = true;
       const currentDate = new Date(this.selectedDate);
       if (direction === 'previous') {
         currentDate.setDate(currentDate.getDate() - 1);
@@ -48,10 +52,15 @@ export default {
       }
       this.selectedDate = currentDate.toISOString().slice(0, 10);
       const schedule = await get_schedule(this.selectedDate);
-      // const schedule = await get_schedule("2024-07-27");
       this.schedule = clean_schedules(schedule);
+      this.filter = 'all';
+      this.filtered_schedule = filter_schedules(this.schedule, this.filter);
       this.loading = false;
     },
+    filterEvents(f) {
+      this.filter = f;
+      this.filtered_schedule = filter_schedules(this.schedule, f);
+    }
   },
 };
 </script>
@@ -93,12 +102,36 @@ export default {
       </div>  
       </div>
 
+          <div class="container">
+      <div class="row justify-space-between text-center py-2">
+        <div class="col-12 mx-auto">
+        <div class="btn-group" role="group" aria-label="Event Filters">
+          <input type="radio" class="btn-check" name="btnradio" id="all" 
+            @click="filterEvents('all')" checked>
+          <label class="btn btn-outline-dark" for="all" style="padding: 0.5rem !important;">All</label>
+
+          <input type="radio" class="btn-check" name="btnradio" id="RUNNING"
+            @click="filterEvents('RUNNING')">
+          <label class="btn btn-outline-dark"  for="RUNNING" style="padding: 0.5rem !important;">Live</label>
+
+          <input type="radio" class="btn-check" name="btnradio" id="FINISHED"
+            @click="filterEvents('FINISHED')">
+          <label class="btn btn-outline-dark"  for="FINISHED" style="padding: 0.5rem !important;">Completed</label>
+
+          <input type="radio" class="btn-check" name="btnradio" id="SCHEDULED"
+            @click="filterEvents('SCHEDULED')">
+          <label class="btn btn-outline-dark"  for="SCHEDULED" style="padding: 0.5rem !important;">Scheduled</label>
+        </div>
+        </div>
+      </div>
+    </div>
+
     <div v-if="loading">Loading...</div>
     <div v-else>
       <!-- Schedule printing -->
       <div v-if="schedule.length == 0">No Italians on this Date</div>      
       <div v-else>
-          <div v-for="event in schedule" :key="event.id" class="card card-body blur shadow-blur mx-3 mx-md-9 mt-2">
+          <div v-for="event in filtered_schedule" :key="event.id" class="card card-body blur shadow-blur mx-3 mx-md-9 mt-2">
             <span>
               <span v-if="event.liveFlag"> 🔴 </span> 
               <span v-if="event.medalFlag"> 🏅 </span> 

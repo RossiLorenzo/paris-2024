@@ -19,6 +19,7 @@ export default function clean_schedules(s){
             "medalFlag": event.medalFlag,
             "liveFlag": event.liveFlag,
             "is_h2h": is_h2h,
+            "status": event.status,
             "italians_names": italians.map(x => x.name),
             "italians_ids": italians.map(x => x.code),
             "italians_winners": italians.map(x => ((x['results'] || [])["winnerLoserTie"] || '')),
