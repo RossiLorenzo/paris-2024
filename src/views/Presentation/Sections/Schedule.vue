@@ -26,7 +26,6 @@ export default {
     this.selectedDate = (new Date(right_now.getTime() - (offset*60*1000))).toISOString().split('T')[0];
     // Get Schedules and Athletes
     const schedule = await get_schedule(this.selectedDate);
-    console.log(clean_schedules(schedule))
     // const schedule = await get_schedule("2024-07-27");
     this.schedule = clean_schedules(schedule);
     // Loading completed
@@ -128,7 +127,7 @@ export default {
                   </a>
                 </span>
                 <!-- Opponent Info -->
-                {{ event.is_h2h ? 'Vs. ' + event.opponents_names.join(', ') : '' }}
+                {{ event.is_h2h ? ' Vs. ' + event.opponents_names.join(', ') : '' }}
               </div>
             </span>
           </div>
