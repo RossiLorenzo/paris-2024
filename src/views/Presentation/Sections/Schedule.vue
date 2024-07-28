@@ -39,7 +39,8 @@ export default {
     setInterval(async () => {
       const schedule = await get_schedule(this.selectedDate);
       this.schedule = clean_schedules(schedule);
-    }, 60000)
+      this.filtered_schedule = filter_schedules(this.schedule, this.filter);
+    }, 10000)
   },
   methods: {
     async updateSelectedDate(direction) {

@@ -10,9 +10,18 @@ export default function filter_schedules(s, f){
   document.querySelector('label[for="' + f +'"]').style.backgroundColor = "#344767";
   document.querySelector('label[for="' + f +'"]').style.color = "white";
   document.querySelector('label[for="' + f +'"]').style.opacity = "1";
-  // Do the actual filtering
+  // Do the actual filtering - ALL
   if (f == 'all') {
     return(s)
   }
-  return(s.filter(x => x.status === f));
+  // Completed
+  if (f === "FINISHED") {
+    return(s.filter(x => x.status === f));
+  }
+  // Running
+  if (f === "RUNNING") {
+    return(s.filter(x => ["GETTING_READY", "RUNNING"].includes(x.status)));
+  }
+  // All other ones
+  return(s.filter(x => !["GETTING_READY", "FINISHED", "RUNNING"].includes(x.status)))
 }
