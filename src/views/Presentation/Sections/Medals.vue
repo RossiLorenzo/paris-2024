@@ -9,6 +9,12 @@ import DefaultCounterCard from "@/components/DefaultCounterCard.vue";
 
 <script>
 export default {
+  props: {
+    country: {
+      type: String,
+      required: true,
+    }
+  },
   data() {
     return {
       medals: null,
@@ -19,17 +25,31 @@ export default {
   async mounted() {
     const medals = await get_medals();
     this.medals = medals
-    this.italian_medals = medals.medalStandings.medalsTable.filter(x => x.organisation === 'ITA')[0].disciplines
-    .map(x => {
-      const w = x.medalWinners
-      w['name'] = x.name
-      return(w)
-    })
+    this.italian_medals = medals.medalStandings.medalsTable.filter(x => x.organisation === this.country)[0].disciplines
+    .map(x => x.medalWinners)
     .flat()
     .flat()
-    .reverse()
-    console.log(this.italian_medals)
     this.loading = false;
+    // Reload the data 
+    setInterval(async () => {
+      this.medals = medals
+          this.italian_medals = medals.medalStandings.medalsTable.filter(x => x.organisation === this.country)[0].disciplines
+          .map(x => x.medalWinners)
+          .flat()
+          .flat()
+    }, 30000)
+  },
+  watch: {
+    country: {
+      immediate: true,
+      async handler(country) {
+        console.log(this.country);
+        this.italian_medals = this.medals.medalStandings.medalsTable.filter(x => x.organisation === this.country)[0].disciplines
+            .map(x => x.medalWinners)
+            .flat()
+            .flat()
+      }
+    }
   }
 };
 </script>
@@ -41,7 +61,8 @@ export default {
       <div class="container">
         <div class="row">
           <div class="col-6">
-            <h4>🏅 Medals </h4>
+            <h4 v-if="country==='ITA'">🇮🇹 Medals</h4>
+            <h4 v-else>🇬🇧 Medals</h4>
           </div>
         </div>
       </div>  
@@ -54,6 +75,7 @@ export default {
           <div class="col-6">
             <DefaultCounterCard
               description="Assigned Medals"
+              title=""
               :count="medals.medalStandings.eventInfo.finishedEvents"
               suffix=""
               :duration="3000"
@@ -63,6 +85,7 @@ export default {
           <div class="col-6">
             <DefaultCounterCard
               description="To Assign"
+              title=""
               :count="medals.medalStandings.eventInfo.totalEvents - medals.medalStandings.eventInfo.finishedEvents"
               suffix=""
               :duration="3000"
@@ -86,7 +109,7 @@ export default {
             <MaterialAvatar :image="'https://olympics.com/OG2024/assets/images/flags/OG2024/' + nation.organisation + '.webp'" size='xs' :alt="nation.organisation"/>
           </div>
           <div class="col-5">             
-            <span v-if="nation.organisation === 'ITA'"> &nbsp; <b> {{ nation.description }} </b> </span>
+            <span v-if="nation.organisation === country"> &nbsp; <b> {{ nation.description }} </b> </span>
             <span v-else> &nbsp; {{ nation.description === 'United States' ? 'USA' : nation.description.split(',')[0] }} </span>
           </div>
           <div class="col-2">             
@@ -102,7 +125,7 @@ export default {
       </div>
       <!-- Italian Medals -->
       <div class="container mt-4">
-      <h6>🇮🇹 Medals </h6>
+      <h6>Medals </h6>
         <div v-for="italian in italian_medals">
           <div class="row mt-3" >
             <div class="col-1">
@@ -120,7 +143,7 @@ export default {
         <div class="row" >
           <div class="col-2" />
           <div class="col-10" > 
-            <MaterialAvatar v-if="isNaN(italian.competitorCode)" image="https://olympics.com/OG2024/assets/images/flags/OG2024/ITA.webp" size='xs' alt="ITA"/>
+            <MaterialAvatar v-if="isNaN(italian.competitorCode)" :image="'https://olympics.com/OG2024/assets/images/flags/OG2024/' + country + '.webp'" size='xs' alt="flag"/>
             <MaterialAvatar v-else :image="'https://olympics.com/OG2024/pic/OG2024/001/' + italian.competitorCode.slice(1, 4) + '/medium/' + italian.competitorCode + '.jpg'" size='xs' :alt="italian.competitorCode"/>
             <span>
                   <a v-if="isNaN(italian.competitorCode)" :href="'https://olympics.com/en/paris-2024/team/' + italian.competitorCode">

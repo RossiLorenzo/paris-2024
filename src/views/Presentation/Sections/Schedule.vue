@@ -12,6 +12,12 @@ import MaterialButton from "@/components/MaterialButton.vue";
 
 <script>
 export default {
+  props: {
+    country: {
+      type: String,
+      required: true,
+    }
+  },
   data() {
     return {
       schedule: [],
@@ -31,16 +37,14 @@ export default {
     const schedule = await get_schedule(this.selectedDate);
     // const schedule = await get_schedule("2024-07-27");
     this.filter = 'ALL';
-    this.schedule = clean_schedules(schedule);
+    this.schedule = clean_schedules(schedule, this.country);
     this.filtered_schedule = filter_schedules(this.schedule, this.filter);
     // Loading completed
     this.loading = false;
-
     // Reload the data 
     setInterval(async () => {
-      this.filter = this.filter;
       const schedule = await get_schedule(this.selectedDate);
-      this.schedule = clean_schedules(schedule);
+      this.schedule = clean_schedules(schedule, this.country);
       this.filtered_schedule = filter_schedules(this.schedule, this.filter);
     }, 30000)
   },
@@ -55,7 +59,8 @@ export default {
       }
       this.selectedDate = currentDate.toISOString().slice(0, 10);
       const schedule = await get_schedule(this.selectedDate);
-      this.schedule = clean_schedules(schedule);
+      console.log(this.country);
+      this.schedule = clean_schedules(schedule, this.country);
       this.filter = 'ALL';
       this.filtered_schedule = filter_schedules(this.schedule, this.filter);
       this.loading = false;
@@ -65,6 +70,16 @@ export default {
       this.filtered_schedule = filter_schedules(this.schedule, f);
     }
   },
+  watch: {
+    country: {
+      immediate: true,
+      async handler(country) {
+        const schedule = await get_schedule(this.selectedDate);
+        this.schedule = clean_schedules(schedule, this.country);
+        this.filtered_schedule = filter_schedules(this.schedule, this.filter);
+      }
+    }
+  }
 };
 </script>
 
@@ -75,7 +90,8 @@ export default {
       <div class="container">
         <div class="row">
           <div class="col-6">
-            <h4>🇮🇹 Schedule</h4>
+            <h4 v-if="country==='ITA'">🇮🇹 Schedule</h4>
+            <h4 v-else>🇬🇧 Schedule</h4>
           </div>
           <div class="col-6">
             <div class="container">
@@ -132,7 +148,7 @@ export default {
     <div v-if="loading">Loading...</div>
     <div v-else>
       <!-- Schedule printing -->
-      <div v-if="schedule.length == 0">No Italians on this Date</div>      
+      <div v-if="schedule.length == 0">No Athletes on this Date</div>      
       <div v-else>
           <div v-for="event in filtered_schedule" :key="event.id" class="card card-body blur shadow-blur mx-3 mx-md-9 mt-2">
             <span>
@@ -155,7 +171,7 @@ export default {
                 <span v-if="event.italians_winners[index]==='W'"> ✅ </span>
                 <span v-if="event.italians_winners[index]==='L'"> ⛔️ </span>
                 <!-- Either the photo or the italian flag -->
-                <MaterialAvatar v-if="isNaN(id)" image="https://olympics.com/OG2024/assets/images/flags/OG2024/ITA.webp" size='xs' alt="ITA"/>
+                <MaterialAvatar v-if="isNaN(id)" :image="'https://olympics.com/OG2024/assets/images/flags/OG2024/' + country +'.webp'" size='xs' alt="flag"/>
                 <MaterialAvatar v-else :image="'https://olympics.com/OG2024/pic/OG2024/001/' + id.slice(1, 4) + '/medium/' + id + '.jpg'" size='xs' :alt="event.italians_names[index]"/>
                 <!-- Italian Names and Links -->
                 <span>

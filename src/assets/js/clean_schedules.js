@@ -1,6 +1,6 @@
-export default function clean_schedules(s){
+export default function clean_schedules(s, c){
     // Create a reshaped array containing events for the italians
-    const schedule_italians = s.units.filter(x => (x['competitors'] || []).filter(y => y.noc === 'ITA').length > 0);
+    const schedule_italians = s.units.filter(x => (x['competitors'] || []).filter(y => y.noc === c).length > 0);
     if (schedule_italians.length == 0) {
       return([]);
     }
@@ -8,8 +8,8 @@ export default function clean_schedules(s){
         schedule_italians.map((event) => {
           // Extract info
           const is_h2h = event.competitors.length == 2;
-          const italians = event.competitors.filter(x => x.noc === 'ITA');
-          const non_italians = event.competitors.filter(x => x.noc != 'ITA');
+          const italians = event.competitors.filter(x => x.noc === c);
+          const non_italians = event.competitors.filter(x => x.noc != c);
           // Reshaped data
           return({
             "id": event.id,
