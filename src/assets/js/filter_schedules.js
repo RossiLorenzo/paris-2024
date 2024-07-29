@@ -1,17 +1,18 @@
 export default function filter_schedules(s, f){
   // Set all elements to white
-  var labels = document.getElementsByTagName("label");
+  var available_filters = ['FINISHED', 'RUNNING', 'ALL', 'SCHEDULED'];
   // Loop through each label element and set its background color to white
-  for (var i = 0; i < labels.length; i++) {
-    labels[i].style.backgroundColor = "white";
-    labels[i].style.color = "#344767";
+  for (var i = 0; i < available_filters.length; i++) {
+    document.querySelector('label[for="' + available_filters[i] +'"]').style.backgroundColor = "white";
+    document.querySelector('label[for="' + available_filters[i] +'"]').style.color = "#344767";
+    document.querySelector('label[for="' + available_filters[i] +'"]').style.opacity = "1";
   }
   // Set the selected one to a nice color
   document.querySelector('label[for="' + f +'"]').style.backgroundColor = "#344767";
   document.querySelector('label[for="' + f +'"]').style.color = "white";
   document.querySelector('label[for="' + f +'"]').style.opacity = "1";
   // Do the actual filtering - ALL
-  if (f == 'all') {
+  if (f == 'ALL') {
     return(s)
   }
   // Completed

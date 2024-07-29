@@ -15,14 +15,14 @@ export default {
   data() {
     return {
       schedule: [],
-      filter: 'all',
+      filter: null,
       filtered_schedule: [],
       athletes: [],
       loading: true,
       selectedDate: null //Start of the Olympics
     };
   },
-  async created() {
+  async mounted() {
     // At mount update immediately the date
     const right_now = new Date();
     const offset = right_now.getTimezoneOffset()
@@ -30,17 +30,19 @@ export default {
     // Get Schedules and Athletes
     const schedule = await get_schedule(this.selectedDate);
     // const schedule = await get_schedule("2024-07-27");
+    this.filter = 'ALL';
     this.schedule = clean_schedules(schedule);
-    this.filtered_schedule = this.schedule;
+    this.filtered_schedule = filter_schedules(this.schedule, this.filter);
     // Loading completed
     this.loading = false;
 
     // Reload the data 
     setInterval(async () => {
+      this.filter = this.filter;
       const schedule = await get_schedule(this.selectedDate);
       this.schedule = clean_schedules(schedule);
       this.filtered_schedule = filter_schedules(this.schedule, this.filter);
-    }, 10000)
+    }, 30000)
   },
   methods: {
     async updateSelectedDate(direction) {
@@ -54,7 +56,7 @@ export default {
       this.selectedDate = currentDate.toISOString().slice(0, 10);
       const schedule = await get_schedule(this.selectedDate);
       this.schedule = clean_schedules(schedule);
-      this.filter = 'all';
+      this.filter = 'ALL';
       this.filtered_schedule = filter_schedules(this.schedule, this.filter);
       this.loading = false;
     },
@@ -68,7 +70,7 @@ export default {
 
 <template>
 
-  <div class="card card-body blur shadow-blur mx-3 mx-md-9 mt-3">
+  <div class="card card-body blur shadow-blur mx-3 mx-md-9">
 
       <div class="container">
         <div class="row">
@@ -103,13 +105,13 @@ export default {
       </div>  
       </div>
 
-          <div class="container">
+      <div class="container">
       <div class="row justify-space-between text-center py-2">
         <div class="col-12 mx-auto">
         <div class="btn-group" role="group" aria-label="Event Filters">
-          <input type="radio" class="btn-check" name="btnradio" id="all" 
-            @click="filterEvents('all')" checked>
-          <label class="btn btn-outline-dark" for="all" style="padding: 0.5rem !important;">All</label>
+          <input type="radio" class="btn-check" name="btnradio" id="ALL" 
+            @click="filterEvents('ALL')" checked>
+          <label class="btn btn-outline-dark" for="ALL" style="padding: 0.5rem !important;">All</label>
 
           <input type="radio" class="btn-check" name="btnradio" id="RUNNING"
             @click="filterEvents('RUNNING')">
@@ -145,13 +147,17 @@ export default {
             </span>
             <span class="mt-2"> 
               <div v-for="(id, index) in event.italians_ids">
+                <!-- Medal -->
+                <span v-if="event.italians_medals[index] === 'ME_GOLD'">🥇 </span>
+                <span v-if="event.italians_medals[index] === 'ME_SILVER'">🥈 </span>
+                <span v-if="event.italians_medals[index] === 'ME_BRONZE'">🥉 </span>
                 <!-- Winner/Loser -->
                 <span v-if="event.italians_winners[index]==='W'"> ✅ </span>
                 <span v-if="event.italians_winners[index]==='L'"> ⛔️ </span>
                 <!-- Either the photo or the italian flag -->
                 <MaterialAvatar v-if="isNaN(id)" image="https://olympics.com/OG2024/assets/images/flags/OG2024/ITA.webp" size='xs' alt="ITA"/>
                 <MaterialAvatar v-else :image="'https://olympics.com/OG2024/pic/OG2024/001/' + id.slice(1, 4) + '/medium/' + id + '.jpg'" size='xs' :alt="event.italians_names[index]"/>
-                <!-- Athlete Names and Links -->
+                <!-- Italian Names and Links -->
                 <span>
                   <a v-if="isNaN(id)" :href="'https://olympics.com/en/paris-2024/team/' + id">
                     &nbsp; {{ event.italians_names[index] }} 

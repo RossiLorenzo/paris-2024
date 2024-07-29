@@ -23,6 +23,7 @@ export default function clean_schedules(s){
             "italians_names": italians.map(x => x.name),
             "italians_ids": italians.map(x => x.code),
             "italians_winners": italians.map(x => ((x['results'] || [])["winnerLoserTie"] || '')),
+            "italians_medals": italians.map(x => ((x['results'] || [])["medalType"] || '')),
             "opponents_names": non_italians.map(x => x.name),
             "opponents_nocs": non_italians.map(x => x.noc),
             "url": event.extraData.detailUrl,
