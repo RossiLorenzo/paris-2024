@@ -75,7 +75,7 @@ export default {
   </Header>
   <div class="container mt-3">
     <div class="row justify-space-between text-center py-2">
-      <div class="col-9 mx-auto">
+      <div class="col-7 mx-auto">
         <div class="btn-group" role="group" aria-label="Section">
           <input type="radio" class="btn-check" name="btnradio" id="schedule" @click="setView('schedule')" checked>
           <label class="btn btn-outline-dark" for="schedule" style="padding: 0.5rem !important;">📅 Schedule</label>
@@ -83,7 +83,7 @@ export default {
           <label class="btn btn-outline-dark" for="medals" style="padding: 0.5rem !important;">🏅 Medals</label>
         </div>
       </div>
-      <div class="col-3 mx-auto">
+      <div class="col-4 mx-auto">
         <div class="btn-group" role="group" aria-label="Section">
           <input type="radio" class="btn-check" name="btnradio" id="ITA" @click="setCountry('ITA')" checked>
           <label class="btn btn-outline-dark" for="ITA" style="padding: 0.5rem !important;">🇮🇹</label>
@@ -91,6 +91,7 @@ export default {
           <label class="btn btn-outline-dark" for="GBR" style="padding: 0.5rem !important;">🇬🇧</label>
         </div>
       </div>
+      <div class="col-1 mx-auto" />
     </div>
   </div>
   <Schedule id='schedule_section' :country="country"/>
