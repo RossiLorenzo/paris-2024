@@ -12,6 +12,7 @@ export default function filter_schedules(s, f){
   document.querySelector('label[for="' + f +'"]').style.color = "white";
   document.querySelector('label[for="' + f +'"]').style.opacity = "1";
   // Do the actual filtering - ALL
+  s = s.filter(x => x.status != "POSTPONED")
   if (f == 'ALL') {
     return(s)
   }

@@ -38,6 +38,7 @@ export default {
     // const schedule = await get_schedule("2024-07-27");
     this.filter = 'ALL';
     this.schedule = clean_schedules(schedule, this.country);
+    console.log(this.schedule.map(x => x.status))
     this.filtered_schedule = filter_schedules(this.schedule, this.filter);
     // Loading completed
     this.loading = false;
