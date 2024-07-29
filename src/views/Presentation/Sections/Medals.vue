@@ -19,8 +19,16 @@ export default {
   async mounted() {
     const medals = await get_medals();
     this.medals = medals
-    this.italian_medals = medals.medalStandings.medalsTable.filter(x => x.organisation === 'ITA')
-      .map(x => x.disciplines.map(y => y.medalWinners)).flat().flat().reverse();
+    this.italian_medals = medals.medalStandings.medalsTable.filter(x => x.organisation === 'ITA')[0].disciplines
+    .map(x => {
+      const w = x.medalWinners
+      w['name'] = x.name
+      return(w)
+    })
+    .flat()
+    .flat()
+    .reverse()
+    console.log(this.italian_medals)
     this.loading = false;
   }
 };
@@ -95,20 +103,37 @@ export default {
       <!-- Italian Medals -->
       <div class="container mt-4">
       <h6>🇮🇹 Medals </h6>
-        <div class="row" v-for="italian in italian_medals">
-          <div class="col-1">
-              <span v-if="italian.medalType === 'ME_GOLD'">🥇 </span>
-              <span v-if="italian.medalType === 'ME_SILVER'">🥈 </span>
-              <span v-if="italian.medalType === 'ME_BRONZE'">🥉 </span>
+        <div v-for="italian in italian_medals">
+          <div class="row mt-3" >
+            <div class="col-1">
+                <span v-if="italian.medalType === 'ME_GOLD'">🥇 </span>
+                <span v-if="italian.medalType === 'ME_SILVER'">🥈 </span>
+                <span v-if="italian.medalType === 'ME_BRONZE'">🥉 </span>
+            </div>
+            <div class="col-1">
+              <MaterialAvatar :image="'https://gstatic.olympics.com/s1/t_original/static/light/pictograms-paris-2024/olympics/' + italian.disciplineCode + '_small.svg'" size='xs' :alt="italian.disciplineCode" />
+            </div>
+            <div class="col-10">
+              <b>&nbsp;{{ italian.eventDescription }} </b>
+            </div>
           </div>
-          <div class="col-11"> 
-<MaterialAvatar v-if="isNaN(italian.competitorCode)" image="https://olympics.com/OG2024/assets/images/flags/OG2024/ITA.webp" size='xs' alt="ITA"/>
+        <div class="row" >
+          <div class="col-2" />
+          <div class="col-10" > 
+            <MaterialAvatar v-if="isNaN(italian.competitorCode)" image="https://olympics.com/OG2024/assets/images/flags/OG2024/ITA.webp" size='xs' alt="ITA"/>
             <MaterialAvatar v-else :image="'https://olympics.com/OG2024/pic/OG2024/001/' + italian.competitorCode.slice(1, 4) + '/medium/' + italian.competitorCode + '.jpg'" size='xs' :alt="italian.competitorCode"/>
-            <span v-if="isNaN(italian.competitorCode)"> &nbsp; {{ italian.eventDescription }} </span>
-            <span v-else> &nbsp; {{italian.competitorDisplayName}} </span>
+            <span>
+                  <a v-if="isNaN(italian.competitorCode)" :href="'https://olympics.com/en/paris-2024/team/' + italian.competitorCode">
+                    &nbsp; {{ italian.competitorDisplayName }} 
+                  </a>
+                  <a v-else :href="'https://olympics.com/en/paris-2024/athlete/' + italian.competitorCode">
+                    &nbsp; {{ italian.competitorDisplayName }} 
+                  </a>
+            </span>
           </div>
         </div>
       </div>
+    </div>
     </div>
   </div>
 
