@@ -83,6 +83,7 @@ export default {
           <label class="btn btn-outline-dark" for="medals" style="padding: 0.5rem !important;">🏅 Medals</label>
         </div>
       </div>
+      <div class="col-1 mx-auto" />
       <div class="col-4 mx-auto">
         <div class="btn-group" role="group" aria-label="Section">
           <input type="radio" class="btn-check" name="btnradio" id="ITA" @click="setCountry('ITA')" checked>
@@ -91,7 +92,6 @@ export default {
           <label class="btn btn-outline-dark" for="GBR" style="padding: 0.5rem !important;">🇬🇧</label>
         </div>
       </div>
-      <div class="col-1 mx-auto" />
     </div>
   </div>
   <Schedule id='schedule_section' :country="country"/>
