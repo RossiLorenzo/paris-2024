@@ -125,7 +125,7 @@ export default {
       </div>
       <!-- Italian Medals -->
       <div class="container mt-4">
-      <h6>Medals </h6>
+      <h6>Athletes </h6>
         <div v-for="italian in italian_medals">
           <div class="row mt-3" >
             <div class="col-1">
