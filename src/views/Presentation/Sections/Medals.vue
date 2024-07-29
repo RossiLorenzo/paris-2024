@@ -79,7 +79,7 @@ export default {
           </div>
           <div class="col-5">             
             <span v-if="nation.organisation === 'ITA'"> &nbsp; <b> {{ nation.description }} </b> </span>
-            <span v-else> &nbsp; {{ nation.description.split(',')[0] }} </span>
+            <span v-else> &nbsp; {{ nation.description === 'United States' ? 'USA' : nation.description.split(',')[0] }} </span>
           </div>
           <div class="col-2">             
             {{nation.medalsNumber.filter(x => x.type === 'Total')[0].gold}}
@@ -101,13 +101,11 @@ export default {
               <span v-if="italian.medalType === 'ME_SILVER'">🥈 </span>
               <span v-if="italian.medalType === 'ME_BRONZE'">🥉 </span>
           </div>
-          <div class="col-1"> 
-            <MaterialAvatar v-if="isNaN(italian.competitorCode)" image="https://olympics.com/OG2024/assets/images/flags/OG2024/ITA.webp" size='xs' alt="ITA"/>
+          <div class="col-11"> 
+<MaterialAvatar v-if="isNaN(italian.competitorCode)" image="https://olympics.com/OG2024/assets/images/flags/OG2024/ITA.webp" size='xs' alt="ITA"/>
             <MaterialAvatar v-else :image="'https://olympics.com/OG2024/pic/OG2024/001/' + italian.competitorCode.slice(1, 4) + '/medium/' + italian.competitorCode + '.jpg'" size='xs' :alt="italian.competitorCode"/>
-          </div>
-          <div class="col-9"> 
-            <span v-if="isNaN(italian.competitorCode)"> {{ italian.eventDescription }} </span>
-            <span v-else> {{italian.competitorDisplayName}} </span>
+            <span v-if="isNaN(italian.competitorCode)"> &nbsp; {{ italian.eventDescription }} </span>
+            <span v-else> &nbsp; {{italian.competitorDisplayName}} </span>
           </div>
         </div>
       </div>
