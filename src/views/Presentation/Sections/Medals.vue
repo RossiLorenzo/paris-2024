@@ -24,31 +24,34 @@ export default {
   },
   async mounted() {
     const medals = await get_medals();
-    this.medals = medals
-    this.italian_medals = medals.medalStandings.medalsTable.filter(x => x.organisation === this.country)[0].disciplines
-    .map(x => x.medalWinners)
-    .flat()
-    .flat()
+    this.medals = medals;
+    this.italian_medals = this.cleanData(medals, this.country);
     this.loading = false;
-    // Reload the data 
+
+    // Reload the data every 30 seconds
     setInterval(async () => {
       const medals = await get_medals();
-      this.medals = medals
-          this.italian_medals = medals.medalStandings.medalsTable.filter(x => x.organisation === this.country)[0].disciplines
-          .map(x => x.medalWinners)
-          .flat()
-          .flat()
-    }, 30000)
+      this.medals = medals;
+      this.italian_medals = this.cleanData(medals, this.country);
+    }, 30000);
   },
   watch: {
     country: {
       immediate: true,
       async handler(country) {
-        this.italian_medals = this.medals.medalStandings.medalsTable.filter(x => x.organisation === this.country)[0].disciplines
-            .map(x => x.medalWinners)
-            .flat()
-            .flat()
+        this.italian_medals = this.cleanData(this.medals, country);
       }
+    }
+  },
+  methods: {
+    cleanData(medals, country) {
+      return medals.medalStandings.medalsTable.filter(x => x.organisation === country)[0].disciplines
+        .map(x => x.medalWinners)
+        .flat()
+        .flat()
+        .sort((a, b) => {
+          return new Date(b.date) - new Date(a.date);
+        });
     }
   }
 };
