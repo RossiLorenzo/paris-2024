@@ -32,6 +32,7 @@ export default {
     this.loading = false;
     // Reload the data 
     setInterval(async () => {
+      const medals = await get_medals();
       this.medals = medals
           this.italian_medals = medals.medalStandings.medalsTable.filter(x => x.organisation === this.country)[0].disciplines
           .map(x => x.medalWinners)
@@ -43,7 +44,6 @@ export default {
     country: {
       immediate: true,
       async handler(country) {
-        console.log(this.country);
         this.italian_medals = this.medals.medalStandings.medalsTable.filter(x => x.organisation === this.country)[0].disciplines
             .map(x => x.medalWinners)
             .flat()
